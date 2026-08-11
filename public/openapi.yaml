@@ -1,0 +1,229 @@
+openapi: 3.0.3
+
+info:
+  title: API Guestbook
+  description: REST API untuk sistem buku tamu
+  version: 1.0.0
+
+servers:
+  - url: http://api-guestbook.test
+    description: Local Development
+
+tags:
+  - name: Guests
+    description: CRUD data tamu
+  - name: Visits
+    description: CRUD data kunjungan
+
+paths:
+
+  /api/guests:
+    get:
+      tags:
+        - Guests
+      summary: Get all guests
+      responses:
+        '200':
+          description: Data guests berhasil diambil
+
+    post:
+      tags:
+        - Guests
+      summary: Create guest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuestRequest'
+      responses:
+        '201':
+          description: Guest berhasil dibuat
+        '422':
+          description: Validation error
+
+  /api/guests/{id}:
+    get:
+      tags:
+        - Guests
+      summary: Get guest by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data guest berhasil diambil
+        '404':
+          description: Guest tidak ditemukan
+
+    put:
+      tags:
+        - Guests
+      summary: Update guest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuestRequest'
+      responses:
+        '200':
+          description: Guest berhasil diperbarui
+        '404':
+          description: Guest tidak ditemukan
+
+    delete:
+      tags:
+        - Guests
+      summary: Delete guest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Guest berhasil dihapus
+        '404':
+          description: Guest tidak ditemukan
+
+
+  /api/visits:
+    get:
+      tags:
+        - Visits
+      summary: Get all visits
+      responses:
+        '200':
+          description: Data visits berhasil diambil
+
+    post:
+      tags:
+        - Visits
+      summary: Create visit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitRequest'
+      responses:
+        '201':
+          description: Visit berhasil dibuat
+        '422':
+          description: Validation error
+
+
+  /api/visits/{id}:
+    get:
+      tags:
+        - Visits
+      summary: Get visit by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data visit berhasil diambil
+        '404':
+          description: Visit tidak ditemukan
+
+    put:
+      tags:
+        - Visits
+      summary: Update visit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitRequest'
+      responses:
+        '200':
+          description: Visit berhasil diperbarui
+        '404':
+          description: Visit tidak ditemukan
+
+    delete:
+      tags:
+        - Visits
+      summary: Delete visit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Visit berhasil dihapus
+        '404':
+          description: Visit tidak ditemukan
+
+
+components:
+
+  schemas:
+
+    GuestRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: Adly
+        email:
+          type: string
+          format: email
+          example: adly@example.com
+        phone:
+          type: string
+          example: "08123456789"
+        company:
+          type: string
+          example: GLOSINDO
+        purpose:
+          type: string
+          example: Kunjungan kerja
+        face_descriptor:
+          type: string
+          example: sample-face-descriptor
+
+    VisitRequest:
+      type: object
+      required:
+        - guest_id
+        - check_in
+      properties:
+        guest_id:
+          type: integer
+          example: 1
+        check_in:
+          type: string
+          format: date-time
+          example: "2026-08-11 10:00:00"
+        check_out:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2026-08-11 16:30:00"
